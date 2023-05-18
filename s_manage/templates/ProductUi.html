@@ -1,0 +1,27 @@
+{% csrf_token %}
+<h1>Lista de productos</h1>
+<hr>
+<div id="grid_productos"></div>
+<hr>
+<script type="text/javascript">
+    ffdata = new FormData()
+    ffdata.append('model_app_name', 's_manage');
+    ffdata.append('model_name', 'Product');
+    ffdata.append('ffields', 'category__name');
+    ffdata.append('ffields', 'family__name');
+    ffdata.append('ffields', 'brand__name');
+    axios.post('{% url "get_model" %}', 
+        ffdata, 
+        {
+            headers: {
+                'X-CSRFToken': uiR.getCookie('csrftoken')
+            } 
+        }).then((rsp)=>{
+            data = rsp.data;
+            console.log(data);
+            rr = uiR.renderTable(data.records)
+            document.querySelector('#grid_productos')
+                    .innerHTML = rr.outerHTML;
+    })
+</script>
+

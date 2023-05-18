@@ -1,0 +1,26 @@
+{% csrf_token %}
+<h1>Lista de clientes</h1>
+<hr>
+<div id="grid_customer"></div>
+<hr>
+<script type="text/javascript">
+    ffdata = new FormData()
+    ffdata.append('model_app_name', 's_manage');
+    ffdata.append('model_name', 'Customer');
+    ffdata.append('ffields', 'channel__name');
+    ffdata.append('ffields', 'chain__name');
+    axios.post('{% url "get_model" %}', 
+        ffdata, 
+        {
+            headers: {
+                'X-CSRFToken': uiR.getCookie('csrftoken')
+            } 
+        }).then((rsp)=>{
+            data = rsp.data;
+            console.log(data);
+            rr = uiR.renderTable(data.records)
+            document.querySelector('#grid_customer')
+                    .innerHTML = rr.outerHTML;
+    })
+</script>
+
