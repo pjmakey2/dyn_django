@@ -1,10 +1,11 @@
 {% csrf_token %}
 <h1>Lista de productos</h1>
+<div id="form_productos"></div>
 <hr>
 <div id="grid_productos"></div>
 <hr>
 <script type="text/javascript">
-    ffdata = new FormData()
+    ffdata = new FormData();
     ffdata.append('model_app_name', 's_manage');
     ffdata.append('model_name', 'Product');
     ffdata.append('ffields', 'category__name');
@@ -23,5 +24,15 @@
             document.querySelector('#grid_productos')
                     .innerHTML = rr.outerHTML;
     })
+    //create the form for the model
+    sdata = new URLSearchParams();
+    sdata.append('model_app_name', 's_manage');
+    sdata.append('model_name', 'Product');
+    axios.get('{% url "s_model" %}',{ params: sdata })
+         .then(rsp=>{
+            uiR.renderForm(rsp.data.mform, 'form_productos')
+         }).catch(err=>{
+            console.log(err)
+         })
+        
 </script>
-

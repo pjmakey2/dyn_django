@@ -1,7 +1,8 @@
 from django.forms import model_to_dict
+from django.db import models
 
 
-def get_modelfield(instance, field):
+def a_mfield(instance, field):
     field_path = field.split('__')
     lfp = len(field_path)
     if len(field_path) > 1:
@@ -20,7 +21,7 @@ def get_modelfield(instance, field):
         return attr()
     return attr
 
-def sfields(mobj, sfields, fields, normalize=[]):
+def m_mfields(mobj, sfields, fields):
     if fields:
         x = model_to_dict(mobj, fields=fields)
     else:
@@ -30,14 +31,73 @@ def sfields(mobj, sfields, fields, normalize=[]):
     x['pk'] = mobj.pk
     x['id'] = mobj.pk
     for ff in sfields:
-        value = get_modelfield(mobj, ff)
+        value = a_mfield(mobj, ff)
         x[ff] = value
-    if normalize:
-        return snormalize(x, sfields+fields, normalize)
     return x
 
-def snormalize(x, keys, normalize):
-    xt = {}
-    for norm, k in zip(normalize, keys):
-        xt[norm] = x[k]
-    return xt
+def m_form(model, order):
+    fields = model._meta.fields
+    json_data = []
+    for field in fields:
+        field_data = {
+            'label': field.verbose_name.capitalize(),
+            'name': field.column if isinstance(field, models.ForeignKey) else field.name,
+            'type': g_ft(field),
+            'required': field.null is False and field.blank is False,
+            'readonly': field.auto_created or not field.editable,
+            'foreignkey': isinstance(field, models.ForeignKey),
+            'foreignmodel': field.related_model._meta.object_name if isinstance(field, models.ForeignKey) else False,
+        }
+        json_data.append(field_data)
+    if order:
+        json_data = sort_fields(json_data, order)
+    return json_data
+
+def g_ft(field):
+    if field.auto_created: return 'hidden'
+    field_mapping = {
+        models.CharField: 'text',
+        models.TextField: 'textarea',
+        models.IntegerField: 'number',
+        models.BooleanField: 'checkbox',
+        models.DateField: 'text',
+        models.DateTimeField: 'text',
+        models.EmailField: 'email',
+        models.FileField: 'file',
+        models.ImageField: 'image',
+        models.URLField: 'url',
+        models.DecimalField: 'number',
+        models.FloatField: 'number',
+        models.UUIDField: 'text',
+        models.ForeignKey: 'select',
+        # Add more field types as needed
+    }
+    for field_class, field_type in field_mapping.items():
+        if isinstance(field, field_class):
+            return field_type
+    return 'text'
+
+def sort_fields(json_data, order):
+    ordered_data = []
+    field_dict = {field['name']: field for field in json_data}
+    for field_name in order:
+        if field_name in field_dict:
+            ordered_data.append(field_dict[field_name])
+    for field in json_data:
+        if field['name'] not in order:
+            ordered_data.append(field)
+    return ordered_data
+
+
+
+def f_mobj(mobj, sitem):
+    filter_args = models.Q()
+    model_fields = mobj._meta.get_fields()
+
+    for field in model_fields:
+        if field.get_internal_type() in ['CharField', 'TextField']:
+            filter_args |= models.Q(**{f"{field.name}__icontains": sitem})
+        elif field.get_internal_type() in ['IntegerField', 'FloatField', 'DecimalField']:
+            filter_args |= models.Q(**{f"{field.name}": sitem})
+    return mobj.objects.filter(filter_args)
+

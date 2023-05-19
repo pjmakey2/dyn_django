@@ -25,4 +25,4 @@ class CustomerUi(TemplateView):
         }
         return render(request, 
                       self.template_name, 
-                      context)    
+                      context)

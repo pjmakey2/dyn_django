@@ -16,12 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from home import Home, Menu, GModel
+from home import Home, Menu, GModel, SModel
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', Home.as_view(), name='home'),
     path('menu/', Menu.as_view(), name='menu'),
     path('s_manage/', include('s_manage.urls')),
-    path('get_model/', GModel.as_view(), name='get_model')
+    path('get_model/', GModel.as_view(), name='get_model'),
+    path('s_model/', SModel.as_view(), name='s_model')
 ]
