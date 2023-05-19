@@ -23,6 +23,12 @@
             rr = uiR.renderTable(data.records)
             document.querySelector('#grid_productos')
                     .innerHTML = rr.outerHTML;
+
+    }).then(()=>{
+        uiR.searchModel(document.querySelector('#Product input[name=name]'), 
+                        's_manage', 'Product',
+                        '{% url "q_model" %}',3
+                        )
     })
     //create the form for the model
     sdata = new URLSearchParams();
@@ -30,9 +36,9 @@
     sdata.append('model_name', 'Product');
     axios.get('{% url "s_model" %}',{ params: sdata })
          .then(rsp=>{
-            uiR.renderForm(rsp.data.mform, 'form_productos')
+            uiR.renderForm('Product', rsp.data.mform, 'form_productos')
          }).catch(err=>{
             console.log(err)
          })
-        
+    
 </script>

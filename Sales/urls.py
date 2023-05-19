@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from home import Home, Menu, GModel, SModel
+from home import Home, Menu, GModel, SModel, QModel
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +24,6 @@ urlpatterns = [
     path('menu/', Menu.as_view(), name='menu'),
     path('s_manage/', include('s_manage.urls')),
     path('get_model/', GModel.as_view(), name='get_model'),
-    path('s_model/', SModel.as_view(), name='s_model')
+    path('s_model/', SModel.as_view(), name='s_model'),
+    path('q_model/', QModel.as_view(), name='q_model')
 ]

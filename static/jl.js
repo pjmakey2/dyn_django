@@ -60,11 +60,12 @@ uiR = {
     }
     return cookieValue;
   },
-  renderForm: (fdata, containerId) => {
+  renderForm: (fid, fdata, containerId) => {
     const container = document.getElementById(containerId);
     container.innerHTML = ''; // Remove existing content
 
     const form = document.createElement('form');
+    form.setAttribute('id', fid);
     form.classList.add("row", "gy-2", "gx-3", "align-items-center")
 
     fdata.forEach((field) => {
@@ -77,8 +78,8 @@ uiR = {
       // Create input element based on field type
       let input;
       if (type === 'hidden') {
-          input = document.createElement('input');
-          input.setAttribute('type', type);
+        input = document.createElement('input');
+        input.setAttribute('type', type);
       }
       else if (type === 'text' || type === 'number') {
         input = document.createElement('input');
@@ -131,5 +132,32 @@ uiR = {
     });
     // Append form to container
     container.appendChild(form);
+  },
+  searchModel: (element, model_app, model_name, url, minLength = 4) => {
+    console.log(element, 'exists right ?');
+    element.removeEventListener('input', uiR.searchHandled.bind(null, url, model_app, model_name, minLength));
+    element.addEventListener('input', uiR.searchHandled.bind(null, url, model_app, model_name, minLength));
+  },
+  searchHandled: (url, model_app, model_name, minLength, evt) => {
+    sitem = evt.target.value;
+    wl = sitem.length
+    if (wl >= minLength) {
+      sdata = new FormData();
+      sdata.append('model_app_name', model_app);
+      sdata.append('model_name', model_name);
+      sdata.append('sitem', sitem);
+      axios.post(url, sdata,
+        {
+          headers: {
+              'X-CSRFToken': uiR.getCookie('csrftoken')
+          } 
+        }
+        ).then(rsp => {
+          console.log(rsp.data);
+        }).catch(err => {
+          console.log(err);
+        })
+    }
   }
 }
+
