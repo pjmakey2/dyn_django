@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.apps import apps
-from eserials.e_models import m_mfields, m_form, f_mobj
+from eserials.e_models import m_mfields, m_form, f_mobj, mf_fields
 import json
 
 get_model = apps.get_model
@@ -46,7 +46,7 @@ class GModel(TemplateView):
         fields = request.POST.getlist("fields")
         ffields = request.POST.getlist("ffields")
         model_class = get_model(model_app_name, model_name)
-        data = [m_mfields(m, ffields, fields) for m in model_class.objects.all()]
+        data = [m_mfields(m, ffields, fields) for m in model_class.objects.all().order_by('-id')]
         return JsonResponse({"records": data})
 
 
@@ -64,10 +64,19 @@ class SModel(TemplateView):
         model_name = request.POST.get("model_name")
         fields = json.loads(request.POST.get("fields"))
         model_class = get_model(model_app_name, model_name)
-        rsp = "created"
-        if fields.get("pk"):
+        fields = mf_fields(model_class, fields)
+        rsp = "Created"
+        if fields.get("id"):
             model_class.objects.filter(pk=fields.get("pk")).update(**fields)
-            rsp = "updated"
+            rsp = "Updated"
         else:
             model_class.objects.create(**fields)
-        return JsonResponse({"sucess": rsp})
+        return JsonResponse({"success": rsp})
+    
+    def delete(self, request):
+        bf = request.body
+        model_app_name = bf.get("model_app_name")
+        model_name = bf.get("model_name")
+        model_class = get_model(model_app_name, model_name)
+        model_class.objects.filter(id=bf.get('id')).delete()
+        return JsonResponse({"success": 'Deleted'})

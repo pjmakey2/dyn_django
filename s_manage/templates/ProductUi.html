@@ -5,40 +5,36 @@
 <div id="grid_productos"></div>
 <hr>
 <script type="text/javascript">
-    ffdata = new FormData();
-    ffdata.append('model_app_name', 's_manage');
-    ffdata.append('model_name', 'Product');
-    ffdata.append('ffields', 'category__name');
-    ffdata.append('ffields', 'family__name');
-    ffdata.append('ffields', 'brand__name');
-    axios.post('{% url "get_model" %}', 
-        ffdata, 
-        {
-            headers: {
-                'X-CSRFToken': uiR.getCookie('csrftoken')
-            } 
-        }).then((rsp)=>{
-            data = rsp.data;
-            console.log(data);
-            rr = uiR.renderTable(data.records)
-            document.querySelector('#grid_productos')
-                    .innerHTML = rr.outerHTML;
+    model_app_name = 's_manage';
+    model_name = 'Product';
+    d_url = '{% url "s_model" %}';
+    g_url = '{% url "get_model" %}';
+    q_url = '{% url "q_model" %}';
 
-    }).then(()=>{
-        uiR.searchModel(document.querySelector('#Product input[name=name]'), 
-                        's_manage', 'Product',
-                        '{% url "q_model" %}',3
-                        )
-    })
+    fcoint = '#form_productos';
+    fid = `F${model_name}`;
+    gcoint = '#grid_productos';
+    width = 800;
+    height = 400
+    mlen = 3;
+    ffor = [
+        'category__name',
+        'family__name',
+        'brand__name'
+    ];
+    uiR.get_model(
+        {
+         model_app_name: model_app_name,
+         model_name: model_name,
+         ffor: ffor,
+         d_url: d_url,
+         g_url: g_url,
+         gcoint: gcoint,
+        }
+    )
     //create the form for the model
-    sdata = new URLSearchParams();
-    sdata.append('model_app_name', 's_manage');
-    sdata.append('model_name', 'Product');
-    axios.get('{% url "s_model" %}',{ params: sdata })
-         .then(rsp=>{
-            uiR.renderForm('Product', rsp.data.mform, 'form_productos')
-         }).catch(err=>{
-            console.log(err)
-         })
+    uiR.formalize_model(
+
+    )
     
 </script>

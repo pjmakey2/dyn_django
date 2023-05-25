@@ -43,13 +43,16 @@ def m_form(model, order):
     fields = model._meta.fields
     json_data = []
     for field in fields:
+        required = field.null is False and field.blank is False
+        gtype = g_ft(field)
+        if gtype == 'checkbox': required = False
         field_data = {
             "label": field.verbose_name.capitalize(),
             "name": field.column
             if isinstance(field, models.ForeignKey)
             else field.name,
-            "type": g_ft(field),
-            "required": field.null is False and field.blank is False,
+            "type": gtype,
+            "required": required,
             "readonly": field.auto_created or not field.editable,
             "foreignkey": isinstance(field, models.ForeignKey),
             "foreignmodel": field.related_model._meta.object_name
@@ -79,7 +82,7 @@ def g_ft(field):
         models.DecimalField: "number",
         models.FloatField: "number",
         models.UUIDField: "text",
-        models.ForeignKey: "select",
+        models.ForeignKey: "text",
         # Add more field types as needed
     }
     for field_class, field_type in field_mapping.items():
@@ -120,3 +123,13 @@ def f_mobj(mobj, sitem):
             except:
                 continue
     return mobj.objects.filter(filter_args)
+
+def mf_fields(mobj, fields):
+    kk = fields.keys()
+    for k in kk:
+        fie = mobj._meta.get_field(k)
+        if isinstance(fie, models.BooleanField):
+            if fields[k] == 'on':
+                fields[k] = True
+    return fields
+

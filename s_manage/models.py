@@ -43,7 +43,7 @@ class ProductBrand(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=255)
     code = models.IntegerField()
-    pack = models.BooleanField()
+    pack = models.BooleanField(default=False)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     family = models.ForeignKey(ProductFamily, on_delete=models.CASCADE)
     brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE)

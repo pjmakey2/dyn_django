@@ -18,7 +18,7 @@
         }).then((rsp)=>{
             data = rsp.data;
             console.log(data);
-            rr = uiR.renderTable(data.records)
+            rr = uiR.renderTable({jsonData:data.records, width:300})
             document.querySelector('#grid_customer')
                     .innerHTML = rr.outerHTML;
     })
