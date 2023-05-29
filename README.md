@@ -9,10 +9,10 @@ A set of algorithms, helpers, and code for rapid and easy work with Django model
 * Get records
 * Specifying foreign keys
 * Specifying methods
-* Render html tables
-* Render html form
+* Automatic render html tables
+* Automatic render html form
 * Search for records in foreign key field
-* Handler ajax submission
+* Ajax form handler
 * Auto Refresh UI
 
 ## Let's create a CRUD for the model product, to see it in action.
