@@ -15,7 +15,7 @@ A set of algorithms, helpers, and code for rapid and easy work with Django model
 
 * Delete record
 
-## Let's create a CRUD for the product model, to see what we can do in detail
+## Let's create a CRUD for the model product, to see it in action.
  * Define a template with the following structure:
    * ### HTML
         ```html
