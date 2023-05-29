@@ -1,3 +1,5 @@
 *.sqlite3
 **/migrations/
 migrations/
+__pychache__/
+**/__pychache__/
