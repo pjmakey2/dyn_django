@@ -2,18 +2,18 @@
 
 A set of algorithms, helpers, and code for rapid and easy work with Django models.
 
-## What you can do ##
+## What is capable of ##
 
-* Retrieve of records
-  * Render an html table
-  * Specify foreign keys
-  * Specify methods
-
-* Add record
-  * Html form generation
-  * Handler for submission to the backend
-
+* Add/Edit record
 * Delete record
+* Get records
+* Specifying foreign keys
+* Specifying methods
+* Render html tables
+* Render html form
+* Search for records in foreign key field
+* Handler ajax submission
+* Auto Refresh UI
 
 ## Let's create a CRUD for the model product, to see it in action.
  * Define a template with the following structure:
