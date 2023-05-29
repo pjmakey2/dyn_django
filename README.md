@@ -2,6 +2,8 @@
 
 A set of algorithms, helpers, and code for rapid and easy work with Django models.
 
+https://github.com/pjmakey2/dyn_django/assets/1290539/525133ad-e6b4-4a33-8c1e-88cb26e16721
+
 ## What you can do ##
 
 * Retrieve of records
@@ -111,8 +113,9 @@ A set of algorithms, helpers, and code for rapid and easy work with Django model
                     crname: prd_ctx.crname,
                 })
             ```
- ## The final result is a CRUD SPA.
+## The final result is a CRUD SPA.
 
+https://github.com/pjmakey2/dyn_django/assets/1290539/525133ad-e6b4-4a33-8c1e-88cb26e16721
 
 ## Tech Stack
 
