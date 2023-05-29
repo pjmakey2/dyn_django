@@ -19,7 +19,6 @@ from django.urls import path, include
 from home import Home, Menu, GModel, SModel, QModel
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', Home.as_view(), name='home'),
     path('menu/', Menu.as_view(), name='menu'),
     path('s_manage/', include('s_manage.urls')),

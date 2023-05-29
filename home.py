@@ -74,7 +74,7 @@ class SModel(TemplateView):
         return JsonResponse({"success": rsp})
     
     def delete(self, request):
-        bf = request.body
+        bf = json.loads(request.body)
         model_app_name = bf.get("model_app_name")
         model_name = bf.get("model_name")
         model_class = get_model(model_app_name, model_name)
